@@ -3,6 +3,11 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { Sidebar } from '@/components/shared.components/Sidebar';
+import { Navbar } from '@/components/shared.components/Navbar';
+import { CreateContainerModal } from '@/components/container.components/CreateContainerModal';
+import { DeleteContainerModal } from '@/components/container.components/DeleteContainerModal';
+import { RenameContainerModal } from '@/components/container.components/RenameContainerModal';
 
 export default function VaultLayout({
   children,
@@ -35,25 +40,24 @@ export default function VaultLayout({
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar placeholder */}
-      <aside className="w-64 border-r border-border bg-card">
-        <div className="p-4">
-          <h2 className="font-bold text-lg">DevVault</h2>
-        </div>
-      </aside>
+      {/* Sidebar */}
+      <Sidebar />
 
       {/* Main content */}
       <main className="flex-1 flex flex-col">
-        {/* Navbar placeholder */}
-        <header className="h-14 border-b border-border bg-card px-6 flex items-center">
-          <p className="text-sm text-muted-foreground">Welcome, {user.email}</p>
-        </header>
+        {/* Navbar */}
+        <Navbar />
 
         {/* Content area */}
         <div className="flex-1 overflow-auto">
           {children}
         </div>
       </main>
+
+      {/* Modals */}
+      <CreateContainerModal />
+      <DeleteContainerModal />
+      <RenameContainerModal />
     </div>
   );
 }
