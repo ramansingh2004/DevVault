@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRegister } from '@/hooks/useAuth';
 import { useAuthStore } from '@/store/auth.store';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
+import { Button } from '@/components/ui.components/Button';
+import { Input } from '@/components/ui.components/Input';
+import { Label } from '@/components/ui.components/Label';
 import { toast } from 'sonner';
 
 export default function RegisterPage() {
