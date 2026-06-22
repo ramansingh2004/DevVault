@@ -3,14 +3,13 @@
 import { useContainers } from '@/hooks/useContainers';
 import { useUIStore } from '@/store/ui.store';
 import { useParams } from 'next/navigation';
-import { ChevronDown, ChevronRight, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, MoreVertical, Package, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
-import { ContainerResponse } from '@/types/api.types';
+import { useState, useMemo } from 'react';
+import { ContainerResponse, ContainerTreeResponse } from '@/types/api.types';
 
 interface ContainerNodeProps {
-  container: ContainerResponse;
-  isSelected: boolean;
+  container: ContainerTreeResponse;
   isExpanded: boolean;
   level: number;
   onToggle: (id: string) => void;
@@ -18,45 +17,53 @@ interface ContainerNodeProps {
 
 function ContainerNode({
   container,
-  isSelected,
   isExpanded,
   level,
   onToggle,
 }: ContainerNodeProps) {
   const [showMenu, setShowMenu] = useState(false);
-  const { openDeleteModal, openRenameModal } = useUIStore();
+  const { openDeleteModal, openRenameModal, expandedContainers } = useUIStore();
+  const params = useParams();
+  const selectedContainerId = params.containerId as string | undefined;
+  const isSelected = selectedContainerId === container.id;
+  const hasChildren = container.children.length > 0;
 
   return (
     <div>
       <div
-        className={`flex items-center gap-2 px-2 py-1.5 mx-2 rounded-md hover:bg-accent transition-colors ${
+        className={`group flex items-center gap-2 px-2 py-1.5 mx-2 rounded-md hover:bg-accent transition-colors ${
           isSelected ? 'bg-accent' : ''
         }`}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
       >
         <button
+          type="button"
           onClick={() => onToggle(container.id)}
-          className="p-0 hover:bg-muted rounded inline-flex"
+          disabled={!hasChildren}
+          className="p-0 hover:bg-muted rounded inline-flex disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label={isExpanded ? 'Collapse container' : 'Expand container'}
         >
-          {isExpanded ? (
-            <ChevronDown size={16} />
-          ) : (
-            <ChevronRight size={16} />
-          )}
+          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </button>
 
         <Link
           href={`/vault/${container.id}`}
           className="flex-1 flex items-center gap-2 min-w-0"
         >
-          <span className="text-lg flex-shrink-0">{container.icon || '📦'}</span>
+          {container.icon ? (
+            <span className="text-lg flex-shrink-0">{container.icon}</span>
+          ) : (
+            <Package size={16} className="flex-shrink-0" />
+          )}
           <span className="text-sm truncate">{container.title}</span>
         </Link>
 
         <div className="relative flex-shrink-0">
           <button
+            type="button"
             onClick={() => setShowMenu(!showMenu)}
             className="p-1 hover:bg-muted rounded opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-label="Open container menu"
           >
             <MoreVertical size={16} />
           </button>
@@ -64,6 +71,7 @@ function ContainerNode({
           {showMenu && (
             <div className="absolute right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-md z-50">
               <button
+                type="button"
                 onClick={() => {
                   openRenameModal(container.id, container.title);
                   setShowMenu(false);
@@ -73,6 +81,7 @@ function ContainerNode({
                 Rename
               </button>
               <button
+                type="button"
                 onClick={() => {
                   openDeleteModal(container.id);
                   setShowMenu(false);
@@ -86,6 +95,20 @@ function ContainerNode({
           )}
         </div>
       </div>
+
+      {isExpanded && hasChildren && (
+        <>
+          {container.children.map((child) => (
+            <ContainerNode
+              key={child.id}
+              container={child}
+              isExpanded={expandedContainers.has(child.id)}
+              level={level + 1}
+              onToggle={onToggle}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }
@@ -97,11 +120,50 @@ export function Sidebar() {
   const selectedContainerId = params.containerId as string | undefined;
   const { openCreateModal } = useUIStore();
 
+  const containerTree = useMemo(() => {
+    if (!containers) return [];
+
+    const map = new Map<string, ContainerTreeResponse>();
+
+    // First pass: Create nodes with empty children array
+    containers.forEach((c) => {
+      map.set(c.id, { ...c, children: [] });
+    });
+
+    const roots: ContainerTreeResponse[] = [];
+
+    // Second pass: Associate children with their parents
+    containers.forEach((c) => {
+      const node = map.get(c.id)!;
+      if (c.parent_id) {
+        const parent = map.get(c.parent_id);
+        if (parent) {
+          parent.children.push(node);
+        } else {
+          roots.push(node);
+        }
+      } else {
+        roots.push(node);
+      }
+    });
+
+    // Sort by order_index
+    const sortByOrder = (a: ContainerTreeResponse, b: ContainerTreeResponse) => a.order_index - b.order_index;
+    roots.sort(sortByOrder);
+    map.forEach((node) => {
+      node.children.sort(sortByOrder);
+    });
+
+    return roots;
+  }, [containers]);
+
   if (!sidebarOpen) {
     return (
       <button
+        type="button"
         onClick={toggleSidebar}
         className="fixed left-0 top-14 z-40 p-2 hover:bg-accent rounded-r-md border-r border-border"
+        aria-label="Open sidebar"
       >
         <ChevronRight size={20} />
       </button>
@@ -110,19 +172,21 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 border-r border-border bg-card flex flex-col h-[calc(100vh-3.5rem)]">
-      {/* Header */}
       <div className="p-4 border-b border-border space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-lg">DevVault</h2>
           <button
+            type="button"
             onClick={toggleSidebar}
             className="p-1 hover:bg-muted rounded"
+            aria-label="Close sidebar"
           >
             <ChevronDown size={20} />
           </button>
         </div>
 
         <button
+          type="button"
           onClick={openCreateModal}
           className="w-full flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
         >
@@ -131,7 +195,6 @@ export function Sidebar() {
         </button>
       </div>
 
-      {/* Container List */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
           <div className="p-4 space-y-2">
@@ -139,26 +202,24 @@ export function Sidebar() {
               <div key={i} className="h-8 bg-muted rounded-md animate-pulse" />
             ))}
           </div>
-        ) : containers && containers.length > 0 ? (
+        ) : containerTree.length > 0 ? (
           <div className="py-2">
-            {containers
-              .filter((c) => !c.parent_id)
-              .map((container) => (
-                <div key={container.id}>
-                  <ContainerNode
-                    container={container}
-                    isSelected={selectedContainerId === container.id}
-                    isExpanded={expandedContainers.has(container.id)}
-                    level={0}
-                    onToggle={toggleContainer}
-                  />
-                </div>
-              ))}
+            {containerTree.map((container) => (
+              <div key={container.id}>
+                <ContainerNode
+                  container={container}
+                  isExpanded={expandedContainers.has(container.id)}
+                  level={0}
+                  onToggle={toggleContainer}
+                />
+              </div>
+            ))}
           </div>
         ) : (
           <div className="p-4 text-center">
             <p className="text-sm text-muted-foreground">No containers yet</p>
             <button
+              type="button"
               onClick={openCreateModal}
               className="mt-3 text-sm text-primary hover:underline font-medium"
             >

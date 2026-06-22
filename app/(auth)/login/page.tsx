@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useAuth';
-import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui.components/Button';
 import { Input } from '@/components/ui.components/Input';
 import { Label } from '@/components/ui.components/Label';
@@ -12,7 +11,6 @@ import { toast } from 'sonner';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser, setToken } = useAuthStore();
   const login = useLogin();
 
   const [email, setEmail] = useState('');
@@ -22,9 +20,6 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const result = await login.mutateAsync({ email, password });
-      setUser(result.user);
-      setToken(result.message);
       toast.success('Logged in successfully');
       router.push('/vault');
     } catch (error: any) {
