@@ -4,7 +4,16 @@ import { useUIStore } from '@/store/ui.store';
 import { useDeleteContainer } from '@/hooks/useContainers';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui.components/Button';
-import { AlertCircle, X } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui.components/Dialog';
 import { toast } from 'sonner';
 
 export function DeleteContainerModal() {
@@ -25,40 +34,29 @@ export function DeleteContainerModal() {
     }
   };
 
-  if (!deleteModalOpen || !selectedContainerId) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-lg shadow-lg max-w-md w-full space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-border p-6">
+    <Dialog open={deleteModalOpen} onOpenChange={closeDeleteModal}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
           <div className="flex items-center gap-2">
             <AlertCircle className="text-destructive" size={24} />
-            <h2 className="text-xl font-bold">Delete Container</h2>
+            <DialogTitle>Delete Container</DialogTitle>
           </div>
-          <button
-            onClick={closeDeleteModal}
-            className="p-1 hover:bg-muted rounded transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
+          <DialogDescription>
+            This action cannot be undone. All blocks within will be permanently deleted.
+          </DialogDescription>
+        </DialogHeader>
 
-        {/* Content */}
-        <div className="px-6 space-y-4">
-          <p className="text-muted-foreground">
-            Are you sure you want to delete this container? This action cannot be undone and all blocks within will be permanently deleted.
-          </p>
-
-          <div className="bg-destructive/10 p-3 rounded-md">
+        <DialogBody className="space-y-4">
+          <div className="bg-destructive/10 border border-destructive/20 p-3 rounded-md">
             <p className="text-sm text-destructive font-medium">
-              This will delete all content in this container
+              Warning: This will delete all content in this container
             </p>
           </div>
-        </div>
+        </DialogBody>
 
         {/* Actions */}
-        <div className="flex gap-2 justify-end p-6 border-t border-border">
+        <DialogFooter>
           <Button
             variant="outline"
             onClick={closeDeleteModal}
@@ -73,8 +71,8 @@ export function DeleteContainerModal() {
           >
             {deleteContainer.isPending ? 'Deleting...' : 'Delete Container'}
           </Button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
