@@ -16,6 +16,7 @@ import {
   DialogBody,
 } from '@/components/ui.components/Dialog';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/error';
 
 const ICON_OPTIONS = ['📦', '📝', '💻', '🎨', '📚', '🔧', '📊', '🎯', '⚡', '🌟'];
 
@@ -44,8 +45,8 @@ export function CreateContainerModal() {
       setTitle('');
       setIcon('📦');
       closeCreateModal();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.detail?.[0]?.msg || 'Failed to create container');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Failed to create container'));
     }
   };
 

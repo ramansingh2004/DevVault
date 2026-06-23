@@ -8,6 +8,7 @@ import { Button } from '@/components/ui.components/Button';
 import { Input } from '@/components/ui.components/Input';
 import { Label } from '@/components/ui.components/Label';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/error';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -29,8 +30,8 @@ export default function RegisterPage() {
       await register.mutateAsync({ email, password });
       toast.success('Account created successfully');
       router.push('/vault');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.detail?.[0]?.msg || 'Registration failed');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Registration failed'));
     }
   };
 

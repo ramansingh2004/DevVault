@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUIStore } from '@/store/ui.store';
-import { useUpdateContainer } from '@/hooks/useContainers';
+import { useUpdateContainer, useContainers } from '@/hooks/useContainers';
 import { Button } from '@/components/ui.components/Button';
 import { Input } from '@/components/ui.components/Input';
 import { Label } from '@/components/ui.components/Label';
@@ -16,6 +16,7 @@ import {
   DialogBody,
 } from '@/components/ui.components/Dialog';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/error';
 
 const ICON_OPTIONS = ['📦', '📝', '💻', '🎨', '📚', '🔧', '📊', '🎯', '⚡', '🌟'];
 
@@ -23,15 +24,20 @@ export function RenameContainerModal() {
   const { renameModalOpen, closeRenameModal, selectedContainerId, renameContainerTitle } =
     useUIStore();
   const updateContainer = useUpdateContainer();
+  const { data: containers } = useContainers();
+
+  const currentContainer = containers?.find((c) => c.id === selectedContainerId);
+  const containerIcon = currentContainer?.icon || '📦';
 
   const [title, setTitle] = useState('');
   const [icon, setIcon] = useState('📦');
+  const [prevSelectedId, setPrevSelectedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (renameContainerTitle) {
-      setTitle(renameContainerTitle);
-    }
-  }, [renameContainerTitle]);
+  if (selectedContainerId !== prevSelectedId) {
+    setPrevSelectedId(selectedContainerId);
+    setTitle(renameContainerTitle || '');
+    setIcon(containerIcon);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +60,8 @@ export function RenameContainerModal() {
 
       toast.success('Container updated successfully');
       closeRenameModal();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.detail?.[0]?.msg || 'Failed to update container');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Failed to update container'));
     }
   };
 

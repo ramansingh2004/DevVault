@@ -8,6 +8,7 @@ import { Button } from '@/components/ui.components/Button';
 import { Input } from '@/components/ui.components/Input';
 import { Label } from '@/components/ui.components/Label';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/error';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function LoginPage() {
       await login.mutateAsync({ email, password });
       toast.success('Logged in successfully');
       router.push('/vault');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.detail?.[0]?.msg || 'Login failed');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Login failed'));
     }
   };
 
@@ -66,7 +67,7 @@ export default function LoginPage() {
       </form>
 
       <div className="text-center text-sm">
-        <span className="text-muted-foreground">Don't have an account? </span>
+        <span className="text-muted-foreground">Don&apos;t have an account? </span>
         <Link href="/register" className="text-primary hover:underline font-medium">
           Sign up
         </Link>

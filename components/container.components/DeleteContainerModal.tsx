@@ -15,6 +15,7 @@ import {
   DialogBody,
 } from '@/components/ui.components/Dialog';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/error';
 
 export function DeleteContainerModal() {
   const { deleteModalOpen, closeDeleteModal, selectedContainerId } = useUIStore();
@@ -29,8 +30,8 @@ export function DeleteContainerModal() {
       toast.success('Container deleted successfully');
       closeDeleteModal();
       router.push('/vault');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.detail?.[0]?.msg || 'Failed to delete container');
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Failed to delete container'));
     }
   };
 
