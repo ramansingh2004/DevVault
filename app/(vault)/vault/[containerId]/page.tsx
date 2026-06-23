@@ -1,13 +1,16 @@
 'use client';
 
 import { useContainer } from '@/hooks/useContainers';
+import { useContainers } from '@/hooks/useContainers';
 import { useBlocks, useCreateBlocks, useUpdateBlocks } from '@/hooks/useBlocks';
+import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui.components/Button';
 import { BlockRenderer } from '@/components/block.components/BlockRenderer';
+import { Breadcrumb } from '@/components/shared.components/BreadCrumb';
 import { toast } from 'sonner';
 
 export default function ContainerPage() {
@@ -15,12 +18,15 @@ export default function ContainerPage() {
   const containerId = params.containerId as string;
 
   const { data: container, isLoading: isContainerLoading } = useContainer(containerId);
+  const { data: allContainers } = useContainers(); // For breadcrumbs
   const { data: blocks, isLoading: isBlocksLoading } = useBlocks(containerId);
+  const breadcrumbs = useBreadcrumbs(containerId, allContainers);
   const createBlocks = useCreateBlocks();
   const updateBlocks = useUpdateBlocks();
 
   const [newBlockType, setNewBlockType] = useState<'heading' | 'paragraph' | 'code' | 'image' | 'link'>('paragraph');
   const [showAddBlock, setShowAddBlock] = useState(false);
+  const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
 
   const handleAddBlock = async () => {
     try {
@@ -44,6 +50,16 @@ export default function ContainerPage() {
       toast.error('Failed to create block');
     }
   };
+
+  // In Container Detail Page:
+useEffect(() => {
+  if (breadcrumbs.length > 0) {
+    const containerIds = breadcrumbs.map(b => b.id);
+    const newExpanded = new Set(expandedContainers);
+    containerIds.forEach(id => newExpanded.add(id));
+    setExpandedContainers(newExpanded);
+  }
+}, [breadcrumbs]);
 
   const handleUpdateBlock = async (blockId: string, newContent: string) => {
     try {
@@ -87,6 +103,13 @@ export default function ContainerPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Breadcrumb Navigation */}
+      {breadcrumbs.length > 0 && (
+        <div className="pb-4 border-b border-border">
+          <Breadcrumb items={breadcrumbs} />
+        </div>
+      )}
+
       {/* Header */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">

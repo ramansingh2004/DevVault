@@ -64,6 +64,12 @@ export const useUIStore = create<UIStore>((set) => ({
     }),
   setExpandedContainers: (containers) => set({ expandedContainers: containers }),
 
+  collapseAllExcept: (containerId: string) => set((state) => {
+  const newExpanded = new Set<string>();
+  newExpanded.add(containerId);
+  return { expandedContainers: newExpanded };
+}),
+
   // Modal actions
   openCreateModal: () => set({ createModalOpen: true }),
   closeCreateModal: () => set({ createModalOpen: false }),

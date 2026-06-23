@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { ChevronDown, ChevronRight, MoreVertical, Package, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
-import { ContainerResponse, ContainerTreeResponse } from '@/types/api.types';
+import { ContainerTreeResponse } from '@/types/api.types';
 
 interface ContainerNodeProps {
   container: ContainerTreeResponse;
