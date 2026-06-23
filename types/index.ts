@@ -1,4 +1,4 @@
-import { BlockResponse, BlockType, ContainerResponse, ContainerTreeResponse, UserResponse } from './api.types';
+import { BlockResponse, ContainerResponse, ContainerTreeResponse, UserResponse } from './api.types';
 
 // Domain models
 export interface User extends UserResponse {}

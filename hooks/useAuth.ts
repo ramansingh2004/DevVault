@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import authService from '@/services/auth.service';
-import { TokenResponse, LoginRequest, RegisterRequest } from '@/types/api.types';
+import { RegisterRequest, AuthResponse } from '@/types/api.types';
 
 const AUTH_KEYS = {
   all: ['auth'] as const,
@@ -15,9 +15,14 @@ const AUTH_KEYS = {
 export function useAuth() {
   return useQuery({
     queryKey: AUTH_KEYS.me(),
-    queryFn: () => authService.getMe(),
+    queryFn: async () => {
+      console.log('Fetching current user...');
+      const user = await authService.getMe();
+      console.log('Current user:', user);
+      return user;
+    },
     retry: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 }
 
@@ -31,7 +36,7 @@ export function useRegister() {
 
   return useMutation({
     mutationFn: (data: RegisterRequest) => authService.register(data),
-    onSuccess: (data: TokenResponse) => {
+    onSuccess: (data: AuthResponse) => {
       // Set user data in React Query cache
       queryClient.setQueryData(AUTH_KEYS.me(), data.user);
     },
@@ -47,10 +52,12 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: LoginRequest) => authService.login(data),
-    onSuccess: (data: TokenResponse) => {
-      // Set user data in React Query cache
-      queryClient.setQueryData(AUTH_KEYS.me(), data.user);
+    mutationFn: authService.login,
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: AUTH_KEYS.me(),
+      });
     },
   });
 }
@@ -81,9 +88,10 @@ export function useRefresh() {
 
   return useMutation({
     mutationFn: () => authService.refresh(),
-    onSuccess: (data: TokenResponse) => {
-      // Update user data in cache
-      queryClient.setQueryData(AUTH_KEYS.me(), data.user);
-    },
+    onSuccess: async () => {
+    await queryClient.invalidateQueries({
+    queryKey: AUTH_KEYS.me(),
+  });
+},
   });
 }

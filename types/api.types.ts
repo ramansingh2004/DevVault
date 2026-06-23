@@ -17,6 +17,15 @@ export interface TokenResponse {
   user: UserResponse;
 }
 
+export interface AuthResponse {
+  message: string;
+  user: {
+    id: string;
+    email: string;
+    created_at: string;
+  };
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
