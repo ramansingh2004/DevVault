@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import authService from '@/services/auth.service';
-import { UserCreate, TokenResponse, UserResponse } from '@/types/api.types';
+import { TokenResponse, LoginRequest, RegisterRequest } from '@/types/api.types';
 
 const AUTH_KEYS = {
   all: ['auth'] as const,
@@ -30,7 +30,7 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UserCreate) => authService.register(data),
+    mutationFn: (data: RegisterRequest) => authService.register(data),
     onSuccess: (data: TokenResponse) => {
       // Set user data in React Query cache
       queryClient.setQueryData(AUTH_KEYS.me(), data.user);
@@ -47,7 +47,7 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UserCreate) => authService.login(data),
+    mutationFn: (data: LoginRequest) => authService.login(data),
     onSuccess: (data: TokenResponse) => {
       // Set user data in React Query cache
       queryClient.setQueryData(AUTH_KEYS.me(), data.user);

@@ -17,6 +17,16 @@ export interface TokenResponse {
   user: UserResponse;
 }
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
 // Container types
 export interface ContainerCreate {
   title: string;
