@@ -1,6 +1,6 @@
 'use client';
 
-import { useContainer, useContainers } from '@/hooks/useContainers';
+import { useContainer } from '@/hooks/useContainers';
 import { useBlocks, useCreateBlocks, useUpdateBlocks } from '@/hooks/useBlocks';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, Plus } from 'lucide-react';

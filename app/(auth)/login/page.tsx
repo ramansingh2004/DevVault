@@ -20,6 +20,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
+      await login.mutateAsync({ email, password });
       toast.success('Logged in successfully');
       router.push('/vault');
     } catch (error: any) {
