@@ -31,6 +31,7 @@ export default function LoginPage() {
 
   return (
     <div className="space-y-6">
+    <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-xl p-8">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold">Welcome back</h1>
         <p className="text-muted-foreground">Sign in to your DevVault account</p>
@@ -72,6 +73,7 @@ export default function LoginPage() {
           Sign up
         </Link>
       </div>
+    </div>
     </div>
   );
 }

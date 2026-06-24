@@ -37,6 +37,7 @@ export default function RegisterPage() {
 
   return (
     <div className="space-y-6">
+      <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-xl p-8">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold">Create account</h1>
         <p className="text-muted-foreground">Join DevVault and organize your knowledge</p>
@@ -90,6 +91,7 @@ export default function RegisterPage() {
           Sign in
         </Link>
       </div>
+    </div>
     </div>
   );
 }
