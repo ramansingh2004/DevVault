@@ -24,6 +24,8 @@ export interface AuthResponse {
     email: string;
     created_at: string;
   };
+  access_token: string;
+  refresh_token: string;
 }
 
 export interface LoginRequest {

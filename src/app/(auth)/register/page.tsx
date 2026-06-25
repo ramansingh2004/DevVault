@@ -29,7 +29,7 @@ export default function RegisterPage() {
     try {
       await register.mutateAsync({ email, password });
       toast.success('Account created successfully');
-      router.push('/vault');
+      router.push('/');
     } catch (error: unknown) {
       toast.error(getErrorMessage(error, 'Registration failed'));
     }

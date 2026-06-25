@@ -23,7 +23,7 @@ export default function LoginPage() {
     try {
       await login.mutateAsync({ email, password });
       toast.success('Logged in successfully');
-      router.push('/vault');
+      router.push('/');
     } catch (error: unknown) {
       toast.error(getErrorMessage(error, 'Login failed'));
     }

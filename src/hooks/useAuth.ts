@@ -53,7 +53,6 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: authService.login,
-
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: AUTH_KEYS.me(),

@@ -12,7 +12,8 @@ export function useContainers() {
   return useQuery({
     queryKey: CONTAINER_KEYS.list(),
     queryFn: () => containerService.getAll(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
+    retry: false,
   });
 }
 
