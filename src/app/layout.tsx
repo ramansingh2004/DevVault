@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "react-hot-toast";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { Toaster } from "sonner";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: 'DevVault',
@@ -26,9 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html 
-    lang="en" 
-    className={`${geistSans.variable} ${geistMono.variable} font-sans bg-background text-foreground`}>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} font-sans bg-background text-foreground`}
+    >
       <body className="antialiased">
         <ReactQueryProvider>
           <ThemeProvider>

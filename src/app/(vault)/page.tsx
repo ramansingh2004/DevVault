@@ -129,7 +129,7 @@ export default function DashboardPage() {
           </Button>
           {rootContainers.length > 0 && (
             <Link
-              href={`/vault/${rootContainers[0].id}`}
+              href={`/${rootContainers[0].id}`}
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:border-primary/50"
             >
               <BookOpen size={18} />
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                   {stats.recent.slice(0, 3).map((container) => (
                     <Link
                       key={container.id}
-                      href={`/vault/${container.id}`}
+                      href={`/${container.id}`}
                       className="group p-4 border border-border rounded-lg hover:border-primary/50 hover:bg-accent/30 transition-all flex items-center justify-between"
                     >
                       <div className="flex items-center gap-3 min-w-0">
@@ -189,7 +189,7 @@ export default function DashboardPage() {
                 {rootContainers.map((container) => (
                   <Link
                     key={container.id}
-                    href={`/vault/${container.id}`}
+                    href={`/${container.id}`}
                     className="group p-6 border border-border rounded-lg hover:border-primary/50 hover:bg-accent/50 transition-all"
                   >
                     <div className="space-y-3">
