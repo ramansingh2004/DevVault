@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useUIStore } from '@/store/ui.store';
-import { useCreateContainer } from '@/hooks/useContainers';
+import { useCreateContainer, useContainers } from '@/hooks/useContainers';
 import { Button } from '@/components/ui.components/Button';
 import { Input } from '@/components/ui.components/Input';
 import { Label } from '@/components/ui.components/Label';
@@ -21,11 +21,16 @@ import { getErrorMessage } from '@/lib/error';
 const ICON_OPTIONS = ['📦', '📝', '💻', '🎨', '📚', '🔧', '📊', '🎯', '⚡', '🌟'];
 
 export function CreateContainerModal() {
-  const { createModalOpen, closeCreateModal } = useUIStore();
+  const { createModalOpen, closeCreateModal, parentContainerId } = useUIStore();
+  const { data: containers } = useContainers();
   const createContainer = useCreateContainer();
 
   const [title, setTitle] = useState('');
   const [icon, setIcon] = useState('📦');
+
+  // Get parent container name for display
+  const parentContainer = containers?.find((c) => c.id === parentContainerId);
+  const isChildContainer = !!parentContainerId;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,9 +44,14 @@ export function CreateContainerModal() {
       await createContainer.mutateAsync({
         title: title.trim(),
         icon,
+        parent_id: parentContainerId, // UPDATED: include parent_id for child containers
       });
 
-      toast.success('Container created successfully');
+      toast.success(
+        isChildContainer 
+          ? `Child container "${title}" created successfully`
+          : 'Container created successfully'
+      );
       setTitle('');
       setIcon('📦');
       closeCreateModal();
@@ -54,20 +64,41 @@ export function CreateContainerModal() {
     <Dialog open={createModalOpen} onOpenChange={closeCreateModal}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Create Container</DialogTitle>
+          <DialogTitle>
+            {isChildContainer ? 'Create Child Container' : 'Create Container'}
+          </DialogTitle>
           <DialogDescription>
-            Create a new container to organize your knowledge
+            {isChildContainer ? (
+              <>
+                Create a nested container under{' '}
+                <span className="font-semibold text-foreground">
+                  {parentContainer?.icon} {parentContainer?.title}
+                </span>
+              </>
+            ) : (
+              'Create a new container to organize your knowledge'
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <DialogBody className="space-y-4">
+            {/* Parent Container Info */}
+            {isChildContainer && parentContainer && (
+              <div className="p-3 rounded-md bg-accent/50 border border-accent">
+                <p className="text-xs text-muted-foreground">Parent Container</p>
+                <p className="text-sm font-medium">
+                  {parentContainer.icon} {parentContainer.title}
+                </p>
+              </div>
+            )}
+
             {/* Title Input */}
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                placeholder="My Notes"
+                placeholder={isChildContainer ? 'Nested item name' : 'My Notes'}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={createContainer.isPending}
@@ -108,7 +139,12 @@ export function CreateContainerModal() {
               Cancel
             </Button>
             <Button type="submit" disabled={createContainer.isPending}>
-              {createContainer.isPending ? 'Creating...' : 'Create'}
+              {createContainer.isPending 
+                ? 'Creating...' 
+                : isChildContainer 
+                  ? 'Create Child'
+                  : 'Create'
+              }
             </Button>
           </DialogFooter>
         </form>

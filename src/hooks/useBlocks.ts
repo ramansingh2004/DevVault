@@ -44,6 +44,17 @@ export function useUpdateBlocks() {
   });
 }
 
+export function useDeleteBlock(containerId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (blockId: string) => blockService.delete(blockId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BLOCK_KEYS.byContainer(containerId) });
+    },
+  });
+}
+
 export function useUploadImage() {
   return useMutation({
     mutationFn: (file: File) => blockService.uploadImage(file),

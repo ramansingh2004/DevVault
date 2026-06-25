@@ -19,7 +19,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
     <nav className="flex items-center gap-1 text-sm">
       {/* Home */}
       <Link
-        href="/vault"
+        href="/"
         className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
       >
         <Home size={16} />
@@ -29,7 +29,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
       {/* Breadcrumb items */}
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
-        const href = `/vault/${item.id}`;
+        const href = `/${item.id}`;
 
         return (
           <Fragment key={item.id}>

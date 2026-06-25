@@ -17,6 +17,10 @@ class BlockService {
     return response.data;
   }
 
+  async delete(blockId: string): Promise<void> {
+    await api.delete(`/api/v1/blocks/${blockId}`);
+  }
+
   async uploadImage(file: File): Promise<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file);

@@ -14,6 +14,7 @@ interface UIStore {
   // Modal data
   selectedContainerId: string | null;
   renameContainerTitle: string;
+  parentContainerId: string | null; // NEW: for child container creation
 
   // Theme
   theme: 'light' | 'dark' | 'system';
@@ -24,7 +25,7 @@ interface UIStore {
   setExpandedContainers: (containers: Set<string>) => void;
 
   // Modal actions
-  openCreateModal: () => void;
+  openCreateModal: (parentId?: string) => void; // UPDATED: accepts optional parentId
   closeCreateModal: () => void;
   openDeleteModal: (containerId: string) => void;
   closeDeleteModal: () => void;
@@ -48,6 +49,7 @@ export const useUIStore = create<UIStore>((set) => ({
   settingsModalOpen: false,
   selectedContainerId: null,
   renameContainerTitle: '',
+  parentContainerId: null, // NEW
   theme: 'system',
 
   // Sidebar
@@ -67,8 +69,16 @@ export const useUIStore = create<UIStore>((set) => ({
   collapseAllExcept: (containerId: string) => set({ expandedContainers: new Set([containerId]) }),
 
   // Modal actions
-  openCreateModal: () => set({ createModalOpen: true }),
-  closeCreateModal: () => set({ createModalOpen: false }),
+  openCreateModal: (parentId?: string) => 
+    set({ 
+      createModalOpen: true,
+      parentContainerId: parentId || null, // NEW: set parent if provided
+    }),
+  closeCreateModal: () => 
+    set({ 
+      createModalOpen: false,
+      parentContainerId: null, // NEW: clear parent on close
+    }),
   openDeleteModal: (containerId) => set({ deleteModalOpen: true, selectedContainerId: containerId }),
   closeDeleteModal: () => set({ deleteModalOpen: false, selectedContainerId: null }),
   openRenameModal: (containerId, title) =>

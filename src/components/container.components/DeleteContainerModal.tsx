@@ -2,7 +2,7 @@
 
 import { useUIStore } from '@/store/ui.store';
 import { useDeleteContainer } from '@/hooks/useContainers';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui.components/Button';
 import { AlertCircle } from 'lucide-react';
 import {
@@ -21,6 +21,7 @@ export function DeleteContainerModal() {
   const { deleteModalOpen, closeDeleteModal, selectedContainerId } = useUIStore();
   const deleteContainer = useDeleteContainer();
   const router = useRouter();
+  const params = useParams();
 
   const handleDelete = async () => {
     if (!selectedContainerId) return;
@@ -29,7 +30,9 @@ export function DeleteContainerModal() {
       await deleteContainer.mutateAsync(selectedContainerId);
       toast.success('Container deleted successfully');
       closeDeleteModal();
-      router.push('/vault');
+      if (params.containerId === selectedContainerId) {
+        router.push('/');
+      }
     } catch (error: unknown) {
       toast.error(getErrorMessage(error, 'Failed to delete container'));
     }

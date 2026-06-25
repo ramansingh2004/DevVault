@@ -31,7 +31,7 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <Link href="/vault" className="text-muted-foreground hover:text-foreground transition-colors">
+        <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={20} />
         </Link>
         <h1 className="text-3xl font-bold">Settings</h1>

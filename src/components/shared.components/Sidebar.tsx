@@ -47,7 +47,7 @@ function ContainerNode({
         </button>
 
         <Link
-          href={`/vault/${container.id}`}
+          href={`/${container.id}`}
           className="flex-1 flex items-center gap-2 min-w-0"
         >
           {container.icon ? (

@@ -32,7 +32,7 @@ export function useCreateContainer() {
   return useMutation({
     mutationFn: (data: ContainerCreate) => containerService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CONTAINER_KEYS.list() });
+      queryClient.invalidateQueries({ queryKey: CONTAINER_KEYS.all });
     },
   });
 }
@@ -56,7 +56,7 @@ export function useDeleteContainer() {
   return useMutation({
     mutationFn: (id: string) => containerService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CONTAINER_KEYS.list() });
+      queryClient.invalidateQueries({ queryKey: CONTAINER_KEYS.all });
     },
   });
 }
