@@ -24,7 +24,7 @@ export function BlockRenderer({ block, isEditing = false, onEdit }: BlockRendere
     case 'image':
       return <ImageBlock block={block} onEdit={onEdit} />;
     case 'link':
-      return <LinkBlock block={block} />;
+      return <LinkBlock block={block} onEdit={onEdit} />;
     default:
       return (
         <div className="p-4 bg-muted rounded-md text-muted-foreground">

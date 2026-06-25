@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
 import containerService from '@/services/container.service';
 import { ContainerCreate, ContainerUpdate } from '@/types/api.types';
 
@@ -26,6 +26,17 @@ export function useContainer(containerId: string) {
   });
 }
 
+
+export function useContainerTrees(containerIds: string[]) {
+  return useQueries({
+    queries: containerIds.map((id) => ({
+      queryKey: CONTAINER_KEYS.detail(id),
+      queryFn: () => containerService.getOne(id),
+      staleTime: 1000 * 60 * 5,
+      enabled: !!id,
+    })),
+  });
+}
 export function useCreateContainer() {
   const queryClient = useQueryClient();
 

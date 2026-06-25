@@ -1,6 +1,6 @@
 'use client';
 
-import { useContainers } from '@/hooks/useContainers';
+import { useContainers, useContainerTrees } from '@/hooks/useContainers';
 import { useUIStore } from '@/store/ui.store';
 import { useParams } from 'next/navigation';
 import { ChevronDown, ChevronRight, MoreVertical, Package, Plus, Trash2 } from 'lucide-react';
@@ -115,10 +115,23 @@ function ContainerNode({
 
 export function Sidebar() {
   const { data: containers, isLoading } = useContainers();
+  const rootContainerIds = useMemo(() => containers?.map((container) => container.id) || [], [containers]);
+  const containerTreeQueries = useContainerTrees(rootContainerIds);
+  const isTreeLoading = containerTreeQueries.some((query) => query.isLoading);
+  const containerTrees = containerTreeQueries.map((query) => query.data).filter((container): container is ContainerTreeResponse => !!container);
   const { sidebarOpen, toggleSidebar, expandedContainers, toggleContainer } = useUIStore();
   const { openCreateModal } = useUIStore();
 
   const containerTree = useMemo(() => {
+    if (containerTrees.length > 0) {
+      const sortTree = (items: ContainerTreeResponse[]): ContainerTreeResponse[] =>
+        [...items]
+          .sort((a, b) => a.order_index - b.order_index)
+          .map((item) => ({ ...item, children: sortTree(item.children || []) }));
+
+      return sortTree(containerTrees);
+    }
+
     if (!containers) return [];
 
     const map = new Map<string, ContainerTreeResponse>();
@@ -153,7 +166,7 @@ export function Sidebar() {
     });
 
     return roots;
-  }, [containers]);
+  }, [containerTrees, containers]);
 
   if (!sidebarOpen) {
     return (
@@ -169,7 +182,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-64 border-r border-border bg-card flex flex-col h-[calc(100vh-3.5rem)]">
+    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-border bg-card">
       <div className="p-4 border-b border-border space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-lg">DevVault</h2>
@@ -185,7 +198,7 @@ export function Sidebar() {
 
         <button
           type="button"
-          onClick={openCreateModal}
+          onClick={() => openCreateModal()}
           className="w-full flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
         >
           <Plus size={16} />
@@ -194,7 +207,7 @@ export function Sidebar() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
+        {isLoading || isTreeLoading ? (
           <div className="p-4 space-y-2">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-8 bg-muted rounded-md animate-pulse" />
@@ -218,7 +231,7 @@ export function Sidebar() {
             <p className="text-sm text-muted-foreground">No containers yet</p>
             <button
               type="button"
-              onClick={openCreateModal}
+              onClick={() => openCreateModal()}
               className="mt-3 text-sm text-primary hover:underline font-medium"
             >
               Create one
