@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { Toaster } from "sonner";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+// @ts-expext-error: Cannot find module or type declarations for side-effect import of './globals.css'.
 import "./globals.css";
 
 export const metadata: Metadata = {

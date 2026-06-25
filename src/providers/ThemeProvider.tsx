@@ -8,8 +8,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { theme, setTheme } = useUIStore();
 
   useEffect(() => {
-    setMounted(true);
-
     // Load theme from localStorage
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
@@ -21,6 +19,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setTheme(prefersDark ? 'dark' : 'light');
       }
     }
+
+    const frameId = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
   }, [setTheme]);
 
   useEffect(() => {

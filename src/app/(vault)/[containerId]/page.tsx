@@ -12,6 +12,7 @@ import { Button } from '@/components/ui.components/Button';
 import { BlockRenderer } from '@/components/block.components/BlockRenderer';
 import { Breadcrumb } from '@/components/shared.components/BreadCrumb';
 import { toast } from 'sonner';
+import { useUIStore } from '@/store/ui.store';
 
 export default function ContainerPage() {
   const params = useParams();
@@ -26,7 +27,7 @@ export default function ContainerPage() {
 
   const [newBlockType, setNewBlockType] = useState<'heading' | 'paragraph' | 'code' | 'image' | 'link'>('paragraph');
   const [showAddBlock, setShowAddBlock] = useState(false);
-  const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
+  const { expandedContainers, setExpandedContainers } = useUIStore();
 
   const handleAddBlock = async () => {
     try {
@@ -46,20 +47,31 @@ export default function ContainerPage() {
       });
       toast.success('Block created');
       setShowAddBlock(false);
-    } catch (error: any) {
+    } catch {
       toast.error('Failed to create block');
     }
   };
 
   // In Container Detail Page:
-useEffect(() => {
-  if (breadcrumbs.length > 0) {
-    const containerIds = breadcrumbs.map(b => b.id);
-    const newExpanded = new Set(expandedContainers);
-    containerIds.forEach(id => newExpanded.add(id));
-    setExpandedContainers(newExpanded);
-  }
-}, [breadcrumbs]);
+  useEffect(() => {
+    if (breadcrumbs.length > 0) {
+      const containerIds = breadcrumbs.map(b => b.id);
+      const frameId = requestAnimationFrame(() => {
+        const newExpanded = new Set(expandedContainers);
+        let changed = false;
+        containerIds.forEach(id => {
+          if (!newExpanded.has(id)) {
+            newExpanded.add(id);
+            changed = true;
+          }
+        });
+        if (changed) {
+          setExpandedContainers(newExpanded);
+        }
+      });
+      return () => cancelAnimationFrame(frameId);
+    }
+  }, [breadcrumbs, expandedContainers, setExpandedContainers]);
 
   const handleUpdateBlock = async (blockId: string, newContent: string) => {
     try {
@@ -75,7 +87,7 @@ useEffect(() => {
         ],
       });
       toast.success('Block updated');
-    } catch (error: any) {
+    } catch {
       toast.error('Failed to update block');
     }
   };
@@ -134,7 +146,7 @@ useEffect(() => {
             <div className="flex gap-2">
               <select
                 value={newBlockType}
-                onChange={(e) => setNewBlockType(e.target.value as any)}
+                onChange={(e) => setNewBlockType(e.target.value as 'heading' | 'paragraph' | 'code' | 'image' | 'link')}
                 className="px-3 py-2 rounded-md border border-input bg-background text-sm"
               >
                 <option value="heading">Heading</option>

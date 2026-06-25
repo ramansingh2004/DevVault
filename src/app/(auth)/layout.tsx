@@ -6,7 +6,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="auth-theme-root relative min-h-screen flex items-center justify-center overflow-hidden bg-background text-foreground">
       <AuthBackground />
 
       <div className="relative z-10 w-full max-w-md px-4">

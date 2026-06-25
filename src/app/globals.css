@@ -23,6 +23,11 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --color-card-hover: hsl(var(--card-hover));
+  --color-primary-hover: hsl(var(--primary-hover));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-error: hsl(var(--error));
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -109,18 +114,60 @@
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
 }
 
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--muted)) 0%,
-    hsl(var(--background)) 50%,
-    hsl(var(--muted)) 100%
-  );
+  background: linear-gradient(90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--background)) 50%,
+      hsl(var(--muted)) 100%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
+}
+
+/* Authentication Theme Scoped Styling */
+.auth-theme-root {
+  --background: 40 4% 14%;
+  /* #252422 */
+  --foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --card: 34 6% 24%;
+  /* #403D39 */
+  --card-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --card-hover: 33 6% 28%;
+  /* #4B4742 */
+  --border: 33 5% 34%;
+  /* #5A5651 */
+  --input: 33 5% 34%;
+  /* #5A5651 */
+  --primary: 17 83% 54%;
+  /* #EB5E28 */
+  --primary-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --primary-hover: 17 79% 48%;
+  /* #D94F1A */
+  --muted: 38 16% 76%;
+  /* #CCC5B9 */
+  --muted-foreground: 38 16% 76%;
+  /* #CCC5B9 */
+  --destructive: 0 84% 60%;
+  /* #EF4444 */
+  --success: 142 71% 45%;
+  /* #22C55E */
+  --warning: 38 92% 50%;
+  /* #F59E0B */
+  --error: 0 84% 60%;
+  /* #EF4444 */
+  --ring: 17 83% 54%;
+  /* #EB5E28 */
+}
+
+/* Specific button overrides inside auth wrapper to guarantee hover color matches exactly */
+.auth-theme-root button.bg-primary:hover:not(:disabled) {
+  background-color: #D94F1A !important;
 }

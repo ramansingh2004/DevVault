@@ -31,49 +31,49 @@ export default function LoginPage() {
 
   return (
     <div className="space-y-6">
-    <div className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-xl p-8">
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold">Welcome back</h1>
-        <p className="text-muted-foreground">Sign in to your DevVault account</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <div className="rounded-2xl border border-border bg-card hover:bg-card-hover transition-all duration-300 backdrop-blur-xl p-8 shadow-xl shadow-black/20">
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-bold">Welcome back</h1>
+          <p className="text-muted-foreground">Sign in to your DevVault account</p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <Button type="submit" className="w-full" disabled={login.isPending}>
+            {login.isPending ? 'Signing in...' : 'Sign in'}
+          </Button>
+        </form>
+
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Don&apos;t have an account? </span>
+          <Link href="/register" className="text-primary hover:underline font-medium">
+            Sign up
+          </Link>
         </div>
-
-        <Button type="submit" className="w-full" disabled={login.isPending}>
-          {login.isPending ? 'Signing in...' : 'Sign in'}
-        </Button>
-      </form>
-
-      <div className="text-center text-sm">
-        <span className="text-muted-foreground">Don&apos;t have an account? </span>
-        <Link href="/register" className="text-primary hover:underline font-medium">
-          Sign up
-        </Link>
       </div>
-    </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 class APIClient {
   private axiosInstance: AxiosInstance;
@@ -22,7 +22,7 @@ class APIClient {
       (response) => response,
 
       async (error: AxiosError) => {
-        const originalRequest = error.config as any;
+        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
         if (originalRequest.url?.includes('/auth/refresh')) {
           return Promise.reject(error);

@@ -6,7 +6,6 @@ import {
   useTransform,
 } from "framer-motion";
 import {
-  useMemo,
   useEffect,
   useState,
 } from "react";
@@ -22,9 +21,9 @@ type Bird = {
 };
 
 const COLORS = [
-  "#caa028",
-  "#537692",
-  "#b3cde4",
+  "#EB5E28", // Primary orange
+  "#CCC5B9", // Muted light warm grey
+  "#5A5651", // Border warm grey
 ];
 
 export default function AuthBackground() {
@@ -33,18 +32,19 @@ export default function AuthBackground() {
     width: 1920,
     height: 1080,
   });
+  const [birds, setBirds] = useState<Bird[]>([]);
+  const [particles, setParticles] = useState<{
+    id: number;
+    x: number;
+    y: number;
+    size: number;
+    duration: number;
+  }[]>([]);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   useEffect(() => {
-    setMounted(true);
-
-    setViewport({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-
     const handleMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -60,7 +60,41 @@ export default function AuthBackground() {
     window.addEventListener("mousemove", handleMove);
     window.addEventListener("resize", handleResize);
 
+    const frameId = requestAnimationFrame(() => {
+      setMounted(true);
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      setBirds(
+        Array.from({ length: 24 }, (_, i) => {
+          const depth = Math.random();
+          return {
+            id: i,
+            startY: Math.random() * 100,
+            depth,
+            size: 14 + depth * 30,
+            duration: 25 - depth * 12,
+            delay: Math.random() * 20,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          };
+        })
+      );
+
+      setParticles(
+        Array.from({ length: 40 }, (_, i) => ({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: 1 + Math.random() * 3,
+          duration: 8 + Math.random() * 12,
+        }))
+      );
+    });
+
     return () => {
+      cancelAnimationFrame(frameId);
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("resize", handleResize);
     };
@@ -112,41 +146,6 @@ export default function AuthBackground() {
     (v) => v - 200
   );
 
-  const birds = useMemo<Bird[]>(
-    () =>
-      Array.from({ length: 24 }, (_, i) => {
-        const depth = Math.random();
-
-        return {
-          id: i,
-          startY: Math.random() * 100,
-          depth,
-          size: 14 + depth * 30,
-          duration: 25 - depth * 12,
-          delay: Math.random() * 20,
-          color:
-            COLORS[
-              Math.floor(
-                Math.random() * COLORS.length
-              )
-            ],
-        };
-      }),
-    []
-  );
-
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 1 + Math.random() * 3,
-        duration: 8 + Math.random() * 12,
-      })),
-    []
-  );
-
   if (!mounted) return null;
 
   return (
@@ -163,7 +162,7 @@ export default function AuthBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(-45deg,#001b2e,#102f43,#18364d,#001b2e)",
+            "linear-gradient(-45deg,#1F1E1C,#252422,#403D39,#1F1E1C)",
           backgroundSize: "400% 400%",
         }}
         animate={{
@@ -187,7 +186,7 @@ export default function AuthBackground() {
           x: spotlightX,
           y: spotlightY,
           background:
-            "radial-gradient(circle, rgba(202,160,40,0.18), transparent 70%)",
+            "radial-gradient(circle, rgba(235,94,40,0.15), transparent 70%)",
           filter: "blur(40px)",
         }}
       />
@@ -199,7 +198,7 @@ export default function AuthBackground() {
           x: orb1X,
           y: orb1Y,
           background:
-            "rgba(202,160,40,0.15)",
+            "rgba(235,94,40,0.12)",
         }}
       />
 
@@ -210,7 +209,7 @@ export default function AuthBackground() {
           x: orb2X,
           y: orb2Y,
           background:
-            "rgba(83,118,146,0.15)",
+            "rgba(204,197,185,0.1)",
         }}
       />
 
