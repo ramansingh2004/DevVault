@@ -130,8 +130,8 @@ export default function DashboardPage() {
                   <p className="text-sm text-muted-foreground">Nested Containers</p>
                   <p className="text-3xl font-bold mt-1">{stats.nested}</p>
                 </div>
-                <div className="p-2 bg-blue-500/10 rounded-lg">
-                  <Zap size={20} className="text-blue-500" />
+                <div className="p-2 bg-warning/10 rounded-lg">
+                  <Zap size={20} className="text-warning" />
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                         href={`/${container.id}`}
                         className={`group flex items-center justify-between rounded-lg border p-4 transition-all ${
                           isChild
-                            ? 'border-blue-500/20 bg-blue-500/5 pl-6 hover:border-blue-500/50 hover:bg-blue-500/10'
+                            ? 'border-warning/30 bg-warning/5 pl-6 hover:border-warning/60 hover:bg-warning/10'
                             : 'border-border bg-card hover:border-primary/50 hover:bg-accent/30'
                         }`}
                       >
@@ -185,7 +185,7 @@ export default function DashboardPage() {
                             <div className="mb-1 flex min-w-0 items-center gap-2">
                               <span
                                 className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${
-                                  isChild ? 'bg-blue-500/15 text-blue-600' : 'bg-primary/10 text-primary'
+                                  isChild ? 'bg-warning/15 text-warning' : 'bg-primary/10 text-primary'
                                 }`}
                               >
                                 {isChild ? 'Child' : 'Parent'}

@@ -129,6 +129,70 @@
   animation: shimmer 2s infinite;
 }
 
+
+/* Vault Theme Scoped Styling */
+.vault-theme-root {
+  --background: 40 4% 14%;
+  /* #252422 */
+  --foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --card: 34 6% 24%;
+  /* #403D39 */
+  --card-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --card-hover: 33 6% 28%;
+  /* #4B4742 */
+  --popover: 34 6% 24%;
+  /* #403D39 */
+  --popover-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --border: 33 5% 34%;
+  /* #5A5651 */
+  --input: 33 5% 34%;
+  /* #5A5651 */
+  --primary: 17 83% 54%;
+  /* #EB5E28 */
+  --primary-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --primary-hover: 17 79% 48%;
+  /* #D94F1A */
+  --secondary: 34 6% 24%;
+  /* #403D39 */
+  --secondary-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --muted: 33 6% 28%;
+  /* #4B4742 */
+  --muted-foreground: 38 16% 76%;
+  /* #CCC5B9 */
+  --accent: 33 6% 28%;
+  /* #4B4742 */
+  --accent-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --destructive: 0 84% 60%;
+  /* #EF4444 */
+  --destructive-foreground: 46 100% 97%;
+  /* #FFFCF2 */
+  --success: 142 71% 45%;
+  /* #22C55E */
+  --warning: 38 92% 50%;
+  /* #F59E0B */
+  --error: 0 84% 60%;
+  /* #EF4444 */
+  --ring: 17 83% 54%;
+  /* #EB5E28 */
+  --sidebar: #1F1E1C;
+}
+
+.vault-theme-root button.bg-primary:hover:not(:disabled) {
+  background-color: #D94F1A !important;
+}
+
+.vault-theme-root .bg-card:hover,
+.vault-theme-root .hover\:bg-accent:hover,
+.vault-theme-root .hover\:bg-accent\/30:hover,
+.vault-theme-root .hover\:bg-accent\/50:hover {
+  background-color: #4B4742;
+}
 /* Authentication Theme Scoped Styling */
 .auth-theme-root {
   --background: 40 4% 14%;

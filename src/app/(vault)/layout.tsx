@@ -12,7 +12,7 @@ export default function VaultLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="fixed inset-0 flex overflow-hidden bg-background">
+    <div className="vault-theme-root fixed inset-0 flex overflow-hidden bg-background text-foreground">
       {/* Sidebar */}
       <Sidebar />
 

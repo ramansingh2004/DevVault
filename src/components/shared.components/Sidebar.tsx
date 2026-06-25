@@ -171,7 +171,7 @@ export function Sidebar() {
   if (!sidebarOpen) return null;
 
   return (
-    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-border bg-card">
+    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-border bg-[var(--sidebar)]">
       <div className="p-4 border-b border-border space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-lg">DevVault</h2>
