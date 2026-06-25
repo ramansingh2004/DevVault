@@ -20,7 +20,7 @@ export function Navbar() {
       await logout.mutateAsync();
       toast.success('Logged out successfully');
       router.push('/login');
-    } catch (error) {
+    } catch {
       toast.error('Failed to logout');
     }
   };

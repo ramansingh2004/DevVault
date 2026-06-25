@@ -116,8 +116,6 @@ function ContainerNode({
 export function Sidebar() {
   const { data: containers, isLoading } = useContainers();
   const { sidebarOpen, toggleSidebar, expandedContainers, toggleContainer } = useUIStore();
-  const params = useParams();
-  const selectedContainerId = params.containerId as string | undefined;
   const { openCreateModal } = useUIStore();
 
   const containerTree = useMemo(() => {

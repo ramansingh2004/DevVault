@@ -30,4 +30,6 @@ class BlockService {
   }
 }
 
-export default new BlockService();
+const blockService = new BlockService();
+
+export default blockService;

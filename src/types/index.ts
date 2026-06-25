@@ -1,13 +1,13 @@
 import { BlockResponse, ContainerResponse, ContainerTreeResponse, UserResponse } from './api.types';
 
 // Domain models
-export interface User extends UserResponse {}
+export type User = UserResponse;
 
-export interface Container extends ContainerResponse {}
+export type Container = ContainerResponse;
 
-export interface ContainerTree extends ContainerTreeResponse {}
+export type ContainerTree = ContainerTreeResponse;
 
-export interface Block extends BlockResponse {}
+export type Block = BlockResponse;
 
 // UI State types
 export interface EditorState {

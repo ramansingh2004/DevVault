@@ -27,4 +27,6 @@ class ContainerService {
   }
 }
 
-export default new ContainerService();
+const containerService = new ContainerService();
+
+export default containerService;
