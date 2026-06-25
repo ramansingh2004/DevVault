@@ -254,7 +254,7 @@ export default function ContainerPage() {
                     onClick={() => handleDeleteBlock(block.id)}
                     disabled={deleteBlock.isPending}
                     aria-label="Delete block"
-                    className="text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100 focus:opacity-100"
+                    className="text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                   >
                     <Trash2 size={16} />
                   </Button>

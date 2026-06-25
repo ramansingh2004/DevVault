@@ -168,18 +168,7 @@ export function Sidebar() {
     return roots;
   }, [containerTrees, containers]);
 
-  if (!sidebarOpen) {
-    return (
-      <button
-        type="button"
-        onClick={toggleSidebar}
-        className="fixed left-0 top-14 z-40 p-2 hover:bg-accent rounded-r-md border-r border-border"
-        aria-label="Open sidebar"
-      >
-        <ChevronRight size={20} />
-      </button>
-    );
-  }
+  if (!sidebarOpen) return null;
 
   return (
     <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-border bg-card">

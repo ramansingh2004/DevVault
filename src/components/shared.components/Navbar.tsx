@@ -3,7 +3,7 @@
 import { useAuth, useLogout } from '@/hooks/useAuth';
 import { useUIStore } from '@/store/ui.store';
 import { useRouter } from 'next/navigation';
-import { Search, LogOut, Settings, Moon, Sun, Menu } from 'lucide-react';
+import { Search, LogOut, Settings, Moon, Sun, Menu, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -11,7 +11,7 @@ export function Navbar() {
   const { data: user } = useAuth();
   const logout = useLogout();
   const router = useRouter();
-  const { toggleSidebar, theme, setTheme } = useUIStore();
+  const { sidebarOpen, toggleSidebar, theme, setTheme } = useUIStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -36,13 +36,28 @@ export function Navbar() {
   return (
     <header className="h-14 border-b border-border bg-card px-6 flex items-center justify-between sticky top-0 z-30">
       <div className="flex items-center gap-4 flex-1">
-        {/* Mobile Menu Button */}
-        <button
-          onClick={toggleSidebar}
-          className="lg:hidden p-1 hover:bg-muted rounded"
-        >
-          <Menu size={20} />
-        </button>
+        {!sidebarOpen ? (
+          <div className="flex items-center gap-2 border-r border-border pr-4">
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              className="p-1 hover:bg-muted rounded"
+              aria-label="Open sidebar"
+            >
+              <ChevronRight size={20} />
+            </button>
+            <span className="font-bold text-lg">DevVault</span>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="lg:hidden p-1 hover:bg-muted rounded"
+            aria-label="Toggle sidebar"
+          >
+            <Menu size={20} />
+          </button>
+        )}
 
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-md">
