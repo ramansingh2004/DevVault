@@ -41,7 +41,9 @@ export default function ContainerPage() {
                 ? 'New heading'
                 : newBlockType === 'code'
                   ? '// Your code here\n'
-                  : 'Type something...',
+                  : newBlockType === 'image'
+                    ? ''
+                    : 'Type something...',
             order_index: blocks?.length || 0,
             meta: newBlockType === 'heading' ? { level: 1 } : newBlockType === 'code' ? { language: 'javascript' } : undefined,
           },

@@ -22,7 +22,7 @@ export function BlockRenderer({ block, isEditing = false, onEdit }: BlockRendere
     case 'code':
       return <CodeBlock block={block} isEditing={isEditing} onEdit={onEdit} />;
     case 'image':
-      return <ImageBlock block={block} />;
+      return <ImageBlock block={block} onEdit={onEdit} />;
     case 'link':
       return <LinkBlock block={block} />;
     default:
